@@ -5,12 +5,18 @@
   Show user name instead of button upon successful login and disable button
   during server request.
 </blockquote>
-{{showError$ | async}}
 
-<p *ngIf="showError$ | async"
-   class="error">
-  Error message goes here
+<div *ngIf="error$ | async as error" class="error">
+  {{error}}
+</div>
+
+<p *ngIf="user$ | async as user else login">
+  Welcome, {{user}}
 </p>
-<p>
-  <button (click)="onSubmit()">Submit</button>
-</p>
+<ng-template #login>
+  <p>
+    <button [disabled]="disabled$ | async" (click)="onSubmit()">
+      Submit
+    </button>
+  </p>
+</ng-template>
