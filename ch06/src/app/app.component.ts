@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {map, of, reduce, scan, share, startWith, Subject, switchMap, tap} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,18 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ch06';
+
+  readonly buy$ = new Subject<boolean>();
+
+  readonly chooseSeat$ = new Subject<number>();
+  readonly selected$ = this.chooseSeat$.pipe(
+    scan<number, number[]>((a, c) => a.includes(c) ? a : [...a, c].sort(), []),
+    startWith([]),
+    share()
+  );
+
+  readonly cost$ = this.chooseSeat$.pipe(
+    scan<number, number[]>((a, c) => a.includes(c) ? a : [...a, c].sort(), []),
+    map(selected => selected.length * 3)
+  );
 }
