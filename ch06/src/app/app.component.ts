@@ -13,13 +13,15 @@ export class AppComponent {
 
   readonly chooseSeat$ = new Subject<number>();
   readonly selected$ = this.chooseSeat$.pipe(
-    scan<number, number[]>((a, c) => a.includes(c) ? a : [...a, c].sort(), []),
+    scan((a: number[], c: number) => a.includes(c) ? a : [...a, c].sort(), []),
     startWith([]),
     share()
   );
 
   readonly cost$ = this.chooseSeat$.pipe(
-    scan<number, number[]>((a, c) => a.includes(c) ? a : [...a, c].sort(), []),
-    map(selected => selected.length * 3)
+    reduce((a: number[], c: number) => a.includes(c) ? a : [...a, c].sort(), []),
+    startWith([]),
+    map((selected: number[]) => selected.length * 3),
+    share()
   );
 }
